@@ -22,7 +22,7 @@ var jump_buffer_timer := 0.0
 # dash
 @export var dash_speed := 18.0
 @export var dash_time := 0.1
-@export var dash_cooldown := 2.0
+@export var dash_cooldown := 0.0
 var dash_timer := 0.0 
 @export var dash_cooldown_timer := 0.0 # TODO: display on HUD
 var dash_direction := Vector3.ZERO

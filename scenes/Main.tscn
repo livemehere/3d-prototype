@@ -58,3 +58,4 @@ transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49
 environment = SubResource("Environment_nbc6x")
 
 [node name="Player" parent="." unique_id=374215843 instance=ExtResource("3_vcsgt")]
+dash_speed = 36.0

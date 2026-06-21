@@ -15,9 +15,17 @@ extends CharacterBody3D
 
 # jump timers 
 @export var coyote_time := 0.1
-var coyote_timer := coyote_time
+var coyote_timer := 0.0 
 @export var jump_buffer_time := 0.1
-var jump_buffer_timer := jump_buffer_time
+var jump_buffer_timer := 0.0 
+
+# dash
+@export var dash_speed := 18.0
+@export var dash_time := 0.1
+@export var dash_cooldown := 2.0
+var dash_timer := 0.0 
+@export var dash_cooldown_timer := 0.0 # TODO: display on HUD
+var dash_direction := Vector3.ZERO
 
 @onready var model: MeshInstance3D = $Model
 @onready var third_person_camera: Camera3D = $SpringArm3D/Camera3D
@@ -52,6 +60,18 @@ func _physics_process(delta: float) -> void:
 		velocity.y = jump_force 
 		coyote_timer = 0.0
 		jump_buffer_timer = 0.0
+		
+	# dash
+	if Input.is_action_just_pressed("dash") and dash_cooldown_timer <= 0.0:
+		dash_timer = dash_time
+		dash_cooldown_timer = dash_cooldown
+		# direction
+		dash_direction = -model.global_transform.basis.z
+		dash_direction.y = 0
+		dash_direction = dash_direction.normalized()
+	else:
+		dash_timer = max(dash_timer - delta, 0.0) 
+		dash_cooldown_timer = max(dash_cooldown_timer - delta, 0.0) 
 	
 	# camera direction	
 	var cam_forward := -third_person_camera.global_transform.basis.z
@@ -67,6 +87,11 @@ func _physics_process(delta: float) -> void:
 	# final direction	
 	var direction := (cam_right * input_dir.x + cam_forward * -input_dir.y).normalized()
 	
+	# while dash
+	if dash_timer > 0.0:
+		velocity.x = dash_direction.x * dash_speed
+		velocity.z = dash_direction.z * dash_speed
+	
 	# movement itself
 	if direction:
 		velocity.x = lerp(velocity.x, direction.x * speed, acceleration * delta)
@@ -79,6 +104,5 @@ func _physics_process(delta: float) -> void:
 	if direction:
 		var target_angle := atan2(-direction.x, -direction.z);
 		model.rotation.y = lerp_angle(model.rotation.y, target_angle, turn_speed * delta)
-
 	
 	move_and_slide()

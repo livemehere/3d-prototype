@@ -1,6 +1,7 @@
 extends CharacterBody3D
 
-@export var speed := 8.0
+@export var speed := 2.0
+@export var sprint_speed := 8.0
 @export var turn_speed := 30
 
 # smooth transition for when start/stop move
@@ -110,9 +111,10 @@ func _physics_process(delta: float) -> void:
 		
 	if velocity.y != 0:
 		anim_state.travel("fall")
-	elif direction:
-		anim_state.travel("run")
 	else:
-		anim_state.travel("idle")
+		var move_speed := Vector2(velocity.x, velocity.z).length()
+		var speed_ratio = clamp(move_speed / sprint_speed, 0.0, 1.0)
+		anim_state.travel("move")
+		anim_tree.set("parameters/move/blend_position",speed_ratio)
 	
 	move_and_slide()

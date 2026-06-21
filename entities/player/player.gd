@@ -28,6 +28,7 @@ var dash_timer := 0.0
 var dash_direction := Vector3.ZERO
 
 @export var model: Node3D
+@onready var anim_player: AnimationPlayer = $Model/AnimationPlayer
 @onready var third_person_camera: Camera3D = $SpringArm3D/Camera3D
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -104,5 +105,12 @@ func _physics_process(delta: float) -> void:
 	if direction:
 		var target_angle := atan2(-direction.x, -direction.z);
 		model.rotation.y = lerp_angle(model.rotation.y, target_angle, turn_speed * delta)
+		
+	if velocity.y != 0:
+		anim_player.play("fall")
+	elif direction:
+		anim_player.play("run")
+	else:
+		anim_player.play("idle")
 	
 	move_and_slide()

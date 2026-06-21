@@ -3,18 +3,18 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b2em4xlgx3rlc"
-path="res://.godot/imported/sandbox_man.glb-69ce216f52c434ff6eef14bc3f7cbea0.scn"
+uid="uid://byl325ecdyjsl"
+path="res://.godot/imported/animaionts.glb-964b9f543c5ac8301725478b4b14bea0.scn"
 
 [deps]
 
-source_file="res://assets/models/sandbox_man.glb"
-dest_files=["res://.godot/imported/sandbox_man.glb-69ce216f52c434ff6eef14bc3f7cbea0.scn"]
+source_file="res://entities/player/animaionts.glb"
+dest_files=["res://.godot/imported/animaionts.glb-964b9f543c5ac8301725478b4b14bea0.scn"]
 
 [params]
 
-nodes/root_type="Node3D"
-nodes/root_name="SandboxMan"
+nodes/root_type=""
+nodes/root_name=""
 nodes/root_script=null
 mesh_library/use_node_names_as_mesh_names=false
 array_mesh/deduplicate_surfaces=true

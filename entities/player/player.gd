@@ -27,7 +27,7 @@ var dash_timer := 0.0
 @export var dash_cooldown_timer := 0.0 # TODO: display on HUD
 var dash_direction := Vector3.ZERO
 
-@onready var model: Node3D = $SandboxModel 
+@export var model: Node3D
 @onready var third_person_camera: Camera3D = $SpringArm3D/Camera3D
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")

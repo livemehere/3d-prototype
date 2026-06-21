@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://bjj5iesvbagn4"]
+
+[ext_resource type="PackedScene" uid="uid://b2em4xlgx3rlc" path="res://assets/models/sandbox_man.glb" id="1_uyxme"]
+
+[node name="SandboxMan" unique_id=769100719 instance=ExtResource("1_uyxme")]

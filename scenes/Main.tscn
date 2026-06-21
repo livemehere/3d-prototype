@@ -1,14 +1,19 @@
 [gd_scene format=3 uid="uid://cfhiqph6eeh73"]
 
 [ext_resource type="Script" uid="uid://ic1i1c7i16ip" path="res://scenes/main.gd" id="1_0bbpv"]
-[ext_resource type="Texture2D" uid="uid://dllto0wgk6qin" path="res://assets/prototype-textures/Dark/texture_03.png" id="2_rarhs"]
+[ext_resource type="Texture2D" uid="uid://4ly63vry4hn8" path="res://assets/prototype-textures/Dark/texture_06.png" id="2_rarhs"]
+[ext_resource type="Texture2D" uid="uid://bfjrag8abi048" path="res://assets/prototype-textures/Orange/texture_06.png" id="3_rarhs"]
 [ext_resource type="PackedScene" uid="uid://ckx0a2yfllll3" path="res://entities/player/Player.tscn" id="3_vcsgt"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h6nst"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nxtc6"]
 albedo_texture = ExtResource("2_rarhs")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d5mmr"]
 albedo_texture = ExtResource("2_rarhs")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_caut8"]
+albedo_texture = ExtResource("3_rarhs")
 uv1_triplanar = true
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_s5yxy"]
@@ -24,23 +29,21 @@ sky = SubResource("Sky_h6nst")
 script = ExtResource("1_0bbpv")
 
 [node name="Level" type="CSGCombiner3D" parent="." unique_id=1684405985]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
 operation = 2
 use_collision = true
-metadata/_edit_group_ = true
 
 [node name="Ground" type="CSGBox3D" parent="Level" unique_id=332230250]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-material_override = SubResource("StandardMaterial3D_h6nst")
-size = Vector3(20, 3, 20)
+material_override = SubResource("StandardMaterial3D_nxtc6")
+size = Vector3(35, 1, 35)
 material = SubResource("StandardMaterial3D_d5mmr")
 
-[node name="Substract" type="CSGBox3D" parent="Level/Ground" unique_id=248764401]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0065665245, 1, 0)
-material_override = SubResource("StandardMaterial3D_h6nst")
-operation = 2
-size = Vector3(18, 3, 18)
-material = SubResource("StandardMaterial3D_d5mmr")
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="Level" unique_id=1182885244]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -7, 1.5501136, -9.442638)
+polygon = PackedVector2Array(-3, 0, -3, 1, 1, 1, 3, 0)
+depth = 7.64
+material = SubResource("StandardMaterial3D_caut8")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=231380074]
 transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 10, 0)

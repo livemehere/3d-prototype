@@ -16,9 +16,9 @@ size = Vector3(0.90000004, 0.3, 0.4)
 
 [node name="Player" type="CharacterBody3D" unique_id=374215843]
 script = ExtResource("1_453mm")
-jumpForce = 8.0
 acceleration = 15.0
 friction = 15.0
+jumpForce = 8.0
 airControl = 0.9
 metadata/_edit_group_ = true
 

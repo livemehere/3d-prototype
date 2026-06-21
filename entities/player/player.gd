@@ -12,8 +12,12 @@ extends CharacterBody3D
 @export var fall_gravity_multiplier := 1.8
 @export var low_jump_multiplier := 2.5 # for short jump
 @export var air_friction := 1.0
-@export var coyote_time := 0.5
+
+# jump timers 
+@export var coyote_time := 0.1
 var coyote_timer := coyote_time
+@export var jump_buffer_time := 0.1
+var jump_buffer_timer := jump_buffer_time
 
 @onready var model: MeshInstance3D = $Model
 @onready var third_person_camera: Camera3D = $SpringArm3D/Camera3D
@@ -29,19 +33,25 @@ func _physics_process(delta: float) -> void:
 	elif velocity.y > 0 and not Input.is_action_pressed("jump"):
 		gravity_mutilplier = low_jump_multiplier
 	
-	# in the air
-	if not is_on_floor():
+	# timer check for jump
+	if is_on_floor():
+		coyote_timer = coyote_time
+	else:
 		velocity.y -= gravity * gravity_mutilplier * delta
 		velocity.x *= air_friction
 		velocity.z *= air_friction
+		coyote_timer = max(coyote_timer - delta, 0.0)
 		
-		coyote_timer -= delta
+	if Input.is_action_just_pressed("jump"):
+		jump_buffer_timer = jump_buffer_time
 	else:
-		coyote_timer = coyote_time
+		jump_buffer_timer -= delta
 	
-	# jump 
-	if coyote_timer > 0.0 and Input.is_action_just_pressed("jump"):
+	# jump trigger
+	if jump_buffer_timer > 0.0 and coyote_timer > 0.0:
 		velocity.y = jump_force 
+		coyote_timer = 0.0
+		jump_buffer_timer = 0.0
 	
 	# camera direction	
 	var cam_forward := -third_person_camera.global_transform.basis.z

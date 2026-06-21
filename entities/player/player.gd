@@ -1,17 +1,20 @@
 extends CharacterBody3D
 
-@export var speed: float = 8.0
-@export var turnSPeed: float = 30
+@export var speed := 8.0
+@export var turnSPeed := 30
 
 # smooth transition for when start/stop move
-@export var acceleration: float = 25.0
-@export var friction: float = 25.0
+@export var acceleration := 25.0
+@export var friction := 25.0
 
 # jump/gravity
-@export var jumpForce: float = 4.0
-@export var fall_gravity_multiplier: float = 1.8
-@export var low_jump_multiplier: float = 2.5 # for short jump
-@export var airControl: float = 0.25
+@export var jumpForce := 8.0
+@export var fall_gravity_multiplier := 1.8
+@export var low_jump_multiplier := 2.5 # for short jump
+@export var air_friction := 1.0
+@export var coyote_time := 0.5
+
+var coyote_timer := coyote_time
 
 @onready var model: MeshInstance3D = $Model
 @onready var third_person_camera: Camera3D = $SpringArm3D/Camera3D
@@ -27,12 +30,18 @@ func _physics_process(delta: float) -> void:
 	elif velocity.y > 0 and not Input.is_action_pressed("jump"):
 		gravity_mutilplier = low_jump_multiplier
 	
+	# in the air
 	if not is_on_floor():
 		velocity.y -= gravity * gravity_mutilplier * delta
-		velocity.x *= airControl
-		velocity.z *= airControl
+		velocity.x *= air_friction
+		velocity.z *= air_friction
+		
+		coyote_timer -= delta
+	else:
+		coyote_timer = coyote_time
 	
-	if is_on_floor() and Input.is_action_just_pressed("jump"):
+	# jump 
+	if coyote_timer > 0.0 and Input.is_action_just_pressed("jump"):
 		velocity.y = jumpForce 
 	
 	# camera direction	
@@ -44,10 +53,10 @@ func _physics_process(delta: float) -> void:
 	cam_right = cam_right.normalized()
 	
 	# input direction
-	var input_dir: Vector2 = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
+	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	
 	# final direction	
-	var direction: Vector3 = Vector3(cam_right * input_dir.x + cam_forward * -input_dir.y).normalized()
+	var direction := (cam_right * input_dir.x + cam_forward * -input_dir.y).normalized()
 	
 	# movement itself
 	if direction:
@@ -64,4 +73,3 @@ func _physics_process(delta: float) -> void:
 
 	
 	move_and_slide()
-	

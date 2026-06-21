@@ -3,3 +3,6 @@
 [ext_resource type="PackedScene" uid="uid://b2em4xlgx3rlc" path="res://assets/models/sandbox_man.glb" id="1_uyxme"]
 
 [node name="SandboxMan" unique_id=769100719 instance=ExtResource("1_uyxme")]
+
+[node name="Armature" parent="." index="0" unique_id=791174850]
+transform = Transform3D(-0.01, -2.3283064e-10, 0, 0, 0, -0.01, 2.3283064e-10, -0.01, 0, 0, 0, 0)

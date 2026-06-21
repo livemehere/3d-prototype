@@ -4,7 +4,7 @@ extends CharacterBody3D
 @export var turn_speed := 30
 
 # smooth transition for when start/stop move
-@export var acceleration := 25.0
+@export var acceleration := 10.0
 @export var friction := 25.0
 
 # jump/gravity
@@ -29,6 +29,8 @@ var dash_direction := Vector3.ZERO
 
 @export var model: Node3D
 @onready var anim_player: AnimationPlayer = $Model/AnimationPlayer
+@onready var anim_tree: AnimationTree = $Model/AnimationTree
+@onready var anim_state = anim_tree.get("parameters/playback") 
 @onready var third_person_camera: Camera3D = $SpringArm3D/Camera3D
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -107,10 +109,10 @@ func _physics_process(delta: float) -> void:
 		model.rotation.y = lerp_angle(model.rotation.y, target_angle, turn_speed * delta)
 		
 	if velocity.y != 0:
-		anim_player.play("fall")
+		anim_state.travel("fall")
 	elif direction:
-		anim_player.play("run")
+		anim_state.travel("run")
 	else:
-		anim_player.play("idle")
+		anim_state.travel("idle")
 	
 	move_and_slide()

@@ -1,11 +1,17 @@
 extends CharacterBody3D
 
 @export var speed: float = 8.0
-@export var jumpForce: float = 4.0
+@export var turnSPeed: float = 30
+
+# smooth transition for when start/stop move
 @export var acceleration: float = 25.0
 @export var friction: float = 25.0
+
+# jump/gravity
+@export var jumpForce: float = 4.0
+@export var fall_gravity_multiplier: float = 1.8
+@export var low_jump_multiplier: float = 2.5 # for short jump
 @export var airControl: float = 0.25
-@export var turnSPeed: float = 30
 
 @onready var model: MeshInstance3D = $Model
 @onready var third_person_camera: Camera3D = $SpringArm3D/Camera3D
@@ -14,8 +20,15 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _physics_process(delta: float) -> void:
 	# gravity
+	var gravity_mutilplier := 1.0
+	if velocity.y < 0:
+		gravity_mutilplier = fall_gravity_multiplier 
+	# for lower jump
+	elif velocity.y > 0 and not Input.is_action_pressed("jump"):
+		gravity_mutilplier = low_jump_multiplier
+	
 	if not is_on_floor():
-		velocity.y -= gravity * delta
+		velocity.y -= gravity * gravity_mutilplier * delta
 		velocity.x *= airControl
 		velocity.z *= airControl
 	

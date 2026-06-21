@@ -1,19 +1,18 @@
 extends CharacterBody3D
 
 @export var speed := 8.0
-@export var turnSPeed := 30
+@export var turn_speed := 30
 
 # smooth transition for when start/stop move
 @export var acceleration := 25.0
 @export var friction := 25.0
 
 # jump/gravity
-@export var jumpForce := 8.0
+@export var jump_force := 8.0
 @export var fall_gravity_multiplier := 1.8
 @export var low_jump_multiplier := 2.5 # for short jump
 @export var air_friction := 1.0
 @export var coyote_time := 0.5
-
 var coyote_timer := coyote_time
 
 @onready var model: MeshInstance3D = $Model
@@ -42,7 +41,7 @@ func _physics_process(delta: float) -> void:
 	
 	# jump 
 	if coyote_timer > 0.0 and Input.is_action_just_pressed("jump"):
-		velocity.y = jumpForce 
+		velocity.y = jump_force 
 	
 	# camera direction	
 	var cam_forward := -third_person_camera.global_transform.basis.z
@@ -69,7 +68,7 @@ func _physics_process(delta: float) -> void:
 	# rotate model
 	if direction:
 		var target_angle := atan2(-direction.x, -direction.z);
-		model.rotation.y = lerp_angle(model.rotation.y, target_angle, turnSPeed * delta)
+		model.rotation.y = lerp_angle(model.rotation.y, target_angle, turn_speed * delta)
 
 	
 	move_and_slide()

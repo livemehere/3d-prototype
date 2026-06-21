@@ -53,6 +53,7 @@ material = SubResource("StandardMaterial3D_caut8")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=231380074]
 transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 10, 0)
+shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=889255395]
 environment = SubResource("Environment_nbc6x")

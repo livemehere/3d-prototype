@@ -3,28 +3,20 @@
 [ext_resource type="Script" uid="uid://g6xwl8y4dqpx" path="res://entities/player/player.gd" id="1_453mm"]
 [ext_resource type="Script" uid="uid://81tt8ms14bmi" path="res://entities/player/player_camera_controller.gd" id="2_62i1b"]
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_y30ri"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ka7xo"]
-albedo_color = Color(0.056883328, 0.022062259, 0.0016439238, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_62i1b"]
-material = SubResource("StandardMaterial3D_ka7xo")
-size = Vector3(0.90000004, 0.3, 0.4)
-
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_waelg"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_d5mmr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_caut8"]
+albedo_color = Color(1, 0.3137255, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_d5mmr"]
+material = SubResource("StandardMaterial3D_caut8")
+size = Vector3(0.8, 0.2, 0.5)
 
 [node name="Player" type="CharacterBody3D" unique_id=374215843]
 script = ExtResource("1_453mm")
 metadata/_edit_group_ = true
-
-[node name="Model" type="MeshInstance3D" parent="." unique_id=1302829050]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-mesh = SubResource("CapsuleMesh_y30ri")
-
-[node name="Eye" type="MeshInstance3D" parent="Model" unique_id=1579798681]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45000005, -0.30000067)
-mesh = SubResource("BoxMesh_62i1b")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=975063952]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -36,3 +28,11 @@ spring_length = 5.0
 script = ExtResource("2_62i1b")
 
 [node name="Camera3D" type="Camera3D" parent="SpringArm3D" unique_id=1376734024]
+
+[node name="SandboxModel" type="MeshInstance3D" parent="." unique_id=452682211]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_d5mmr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SandboxModel" unique_id=1429031781]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.39999998, -0.35)
+mesh = SubResource("BoxMesh_d5mmr")

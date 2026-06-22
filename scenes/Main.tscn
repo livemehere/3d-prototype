@@ -61,4 +61,3 @@ shadow_enabled = true
 environment = SubResource("Environment_nbc6x")
 
 [node name="Player" parent="." unique_id=374215843 instance=ExtResource("3_vcsgt")]
-dash_speed = 36.0

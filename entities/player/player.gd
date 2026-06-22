@@ -21,18 +21,26 @@ var coyote_timer := 0.0
 var jump_buffer_timer := 0.0 
 
 # dash
-@export var dash_speed := 18.0
-@export var dash_time := 0.1
+@export var dash_speed := 5.0 
 @export var dash_cooldown := 0.0
-var dash_timer := 0.0 
 @export var dash_cooldown_timer := 0.0 # TODO: display on HUD
 var dash_direction := Vector3.ZERO
 
-@export var model: Node3D
+@onready var model = $Model
 @onready var anim_player: AnimationPlayer = $Model/AnimationPlayer
 @onready var anim_tree: AnimationTree = $Model/AnimationTree
 @onready var anim_state = anim_tree.get("parameters/playback") 
 @onready var third_person_camera: Camera3D = $SpringArm3D/Camera3D
+
+enum State {
+	IDLE,
+	WALKING,
+	RUNNING,
+	JUMPING,
+	DASHING
+}
+
+var state:State = State.IDLE
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -65,18 +73,6 @@ func _physics_process(delta: float) -> void:
 		coyote_timer = 0.0
 		jump_buffer_timer = 0.0
 		
-	# dash
-	if Input.is_action_just_pressed("dash") and dash_cooldown_timer <= 0.0:
-		dash_timer = dash_time
-		dash_cooldown_timer = dash_cooldown
-		# direction
-		dash_direction = -model.global_transform.basis.z
-		dash_direction.y = 0
-		dash_direction = dash_direction.normalized()
-	else:
-		dash_timer = max(dash_timer - delta, 0.0) 
-		dash_cooldown_timer = max(dash_cooldown_timer - delta, 0.0) 
-	
 	# camera direction	
 	var cam_forward := -third_person_camera.global_transform.basis.z
 	var cam_right := third_person_camera.global_transform.basis.x
@@ -91,13 +87,18 @@ func _physics_process(delta: float) -> void:
 	# final direction	
 	var direction := (cam_right * input_dir.x + cam_forward * -input_dir.y).normalized()
 	
-	# while dash
-	if dash_timer > 0.0:
-		velocity.x = dash_direction.x * dash_speed
-		velocity.z = dash_direction.z * dash_speed
+	# dash
+	if Input.is_action_just_pressed("dash") and dash_cooldown_timer <= 0.0 and state != State.DASHING:
+		start_dash(direction)
+		dash_cooldown_timer = dash_cooldown
+	else:
+		dash_cooldown_timer = max(dash_cooldown_timer - delta, 0.0) 
 	
 	# movement itself
-	if direction:
+	if state == State.DASHING:
+		velocity.x = dash_direction.x * dash_speed
+		velocity.z = dash_direction.z * dash_speed
+	elif direction:
 		velocity.x = lerp(velocity.x, direction.x * speed, acceleration * delta)
 		velocity.z = lerp(velocity.z, direction.z * speed, acceleration * delta)
 	else:
@@ -105,16 +106,45 @@ func _physics_process(delta: float) -> void:
 		velocity.z = lerp(velocity.z, 0.0, friction * delta)
 	
 	# rotate model
-	if direction:
-		var target_angle := atan2(-direction.x, -direction.z);
-		model.rotation.y = lerp_angle(model.rotation.y, target_angle, turn_speed * delta)
+	if state == State.DASHING:
+		rotate_model(dash_direction, delta)	
+	elif direction:
+		rotate_model(direction, delta)
+
+		
+	var move_speed := Vector2(velocity.x, velocity.z).length()
+	
 		
 	if velocity.y != 0:
-		anim_state.travel("fall")
+		pass
+#		anim_state.travel("fall")
+	elif state == State.DASHING:
+		anim_state.travel("roll")
+	elif move_speed >= sprint_speed:
+		anim_state.travel("run")
+	elif direction.length() > 0:
+		anim_state.travel("walk")
 	else:
-		var move_speed := Vector2(velocity.x, velocity.z).length()
-		var speed_ratio = clamp(move_speed / sprint_speed, 0.0, 1.0)
-		anim_state.travel("move")
-		anim_tree.set("parameters/move/blend_position",speed_ratio)
+		anim_state.travel("idle")
+			
 	
 	move_and_slide()
+
+func start_dash(direction: Vector3):
+	print("dash start")
+	anim_state.travel("roll")
+	state = State.DASHING
+	
+	dash_direction = direction
+	if dash_direction == Vector3.ZERO:
+		dash_direction = -model.global_transform.basis.z
+		dash_direction.y = 0
+		dash_direction = dash_direction.normalized()
+
+func finish_dash():
+	state = State.IDLE
+	print("dash finish")
+
+func rotate_model(direction:Vector3, delta: float):
+	var target_angle := atan2(-direction.x, -direction.z);
+	model.rotation.y = lerp_angle(model.rotation.y, target_angle, turn_speed * delta)

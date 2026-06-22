@@ -3,3 +3,7 @@
 .idea
 
 assets/blenders/
+/assets/anims/set1/
+/assets/anims/set2/
+*.glb
+*.glb.import
